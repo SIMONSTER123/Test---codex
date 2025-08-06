@@ -3,123 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Animation Website</title>
+    <title>City Builder - Skyline Cities</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>3D Studio</h2>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <h1>Skyline Cities</h1>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
             </div>
-            <div class="nav-menu">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#portfolio" class="nav-link">Portfolio</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </div>
+            <p>Building your city...</p>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section with 3D Background -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Experience the Future</h1>
-            <p class="hero-subtitle">Immerse yourself in stunning 3D animations</p>
-            <button class="cta-button">Explore Now</button>
-        </div>
-        <div id="three-container" class="three-container"></div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section">
-        <div class="container">
-            <h2 class="section-title">About Our 3D World</h2>
-            <div class="about-grid">
-                <div class="about-card">
-                    <div class="card-icon">🎨</div>
-                    <h3>Creative Design</h3>
-                    <p>Cutting-edge 3D animations that push the boundaries of web technology</p>
-                </div>
-                <div class="about-card">
-                    <div class="card-icon">⚡</div>
-                    <h3>Performance</h3>
-                    <p>Optimized rendering for smooth 60fps animations on all devices</p>
-                </div>
-                <div class="about-card">
-                    <div class="card-icon">🚀</div>
-                    <h3>Innovation</h3>
-                    <p>Interactive experiences that respond to user input in real-time</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="section portfolio">
-        <div class="container">
-            <h2 class="section-title">3D Showcase</h2>
-            <div class="portfolio-grid">
-                <div class="portfolio-item">
-                    <div class="portfolio-3d" id="portfolio-cube"></div>
-                    <h3>Rotating Cube</h3>
-                    <p>Interactive geometric animation</p>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-3d" id="portfolio-sphere"></div>
-                    <h3>Morphing Sphere</h3>
-                    <p>Dynamic shape transformation</p>
-                </div>
-                <div class="portfolio-item">
-                    <div class="portfolio-3d" id="portfolio-torus"></div>
-                    <h3>Glowing Torus</h3>
-                    <p>Luminescent ring animation</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>Let's Create Something Amazing</h3>
-                    <p>Ready to bring your ideas to life with stunning 3D animations?</p>
-                    <div class="contact-item">
-                        <span class="contact-icon">📧</span>
-                        <span>hello@3dstudio.com</span>
+    <!-- Main Game Interface -->
+    <div id="game-container" class="hidden">
+        <!-- Top HUD -->
+        <div id="top-hud" class="hud-panel">
+            <div class="city-info">
+                <h2 id="city-name">New City</h2>
+                <div class="city-stats">
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span id="population">0</span>
                     </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">📱</span>
-                        <span>+1 (555) 123-4567</span>
+                    <div class="stat">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span id="budget">100000</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-heart"></i>
+                        <span id="happiness">50%</span>
                     </div>
                 </div>
-                <div class="contact-form">
-                    <form>
-                        <input type="text" placeholder="Your Name" required>
-                        <input type="email" placeholder="Your Email" required>
-                        <textarea placeholder="Your Message" rows="5" required></textarea>
-                        <button type="submit" class="submit-btn">Send Message</button>
-                    </form>
+            </div>
+            
+            <div class="game-controls">
+                <button id="pause-btn" class="control-btn">
+                    <i class="fas fa-pause"></i>
+                </button>
+                <button id="speed-1x" class="control-btn speed-btn active">1x</button>
+                <button id="speed-2x" class="control-btn speed-btn">2x</button>
+                <button id="speed-3x" class="control-btn speed-btn">3x</button>
+            </div>
+        </div>
+
+        <!-- Building Panel -->
+        <div id="building-panel" class="side-panel">
+            <div class="panel-header">
+                <h3>Build</h3>
+                <button id="close-panel" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="panel-content">
+                <div class="building-category" data-category="infrastructure">
+                    <h4><i class="fas fa-road"></i> Infrastructure</h4>
+                    <div class="building-grid">
+                        <div class="building-item" data-type="road">
+                            <div class="building-icon">🛣️</div>
+                            <span>Road</span>
+                            <div class="cost">$50</div>
+                        </div>
+                        <div class="building-item" data-type="power-line">
+                            <div class="building-icon">⚡</div>
+                            <span>Power Line</span>
+                            <div class="cost">$25</div>
+                        </div>
+                        <div class="building-item" data-type="water-pipe">
+                            <div class="building-icon">💧</div>
+                            <span>Water Pipe</span>
+                            <div class="cost">$30</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="building-category" data-category="zoning">
+                    <h4><i class="fas fa-home"></i> Zoning</h4>
+                    <div class="building-grid">
+                        <div class="building-item" data-type="residential">
+                            <div class="building-icon">🏠</div>
+                            <span>Residential</span>
+                            <div class="cost">$100</div>
+                        </div>
+                        <div class="building-item" data-type="commercial">
+                            <div class="building-icon">🏢</div>
+                            <span>Commercial</span>
+                            <div class="cost">$150</div>
+                        </div>
+                        <div class="building-item" data-type="industrial">
+                            <div class="building-icon">🏭</div>
+                            <span>Industrial</span>
+                            <div class="cost">$200</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="building-category" data-category="services">
+                    <h4><i class="fas fa-building"></i> Services</h4>
+                    <div class="building-grid">
+                        <div class="building-item" data-type="power-plant">
+                            <div class="building-icon">🏭</div>
+                            <span>Power Plant</span>
+                            <div class="cost">$5000</div>
+                        </div>
+                        <div class="building-item" data-type="water-tower">
+                            <div class="building-icon">🗼</div>
+                            <span>Water Tower</span>
+                            <div class="cost">$3000</div>
+                        </div>
+                        <div class="building-item" data-type="hospital">
+                            <div class="building-icon">🏥</div>
+                            <span>Hospital</span>
+                            <div class="cost">$8000</div>
+                        </div>
+                        <div class="building-item" data-type="school">
+                            <div class="building-icon">🏫</div>
+                            <span>School</span>
+                            <div class="cost">$4000</div>
+                        </div>
+                        <div class="building-item" data-type="fire-station">
+                            <div class="building-icon">🚒</div>
+                            <span>Fire Station</span>
+                            <div class="cost">$6000</div>
+                        </div>
+                        <div class="building-item" data-type="police-station">
+                            <div class="building-icon">🚓</div>
+                            <span>Police Station</span>
+                            <div class="cost">$7000</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 3D Studio. All rights reserved.</p>
+        <!-- Bottom HUD -->
+        <div id="bottom-hud" class="hud-panel">
+            <div class="tool-buttons">
+                <button id="build-btn" class="tool-btn active">
+                    <i class="fas fa-hammer"></i>
+                    <span>Build</span>
+                </button>
+                <button id="bulldoze-btn" class="tool-btn">
+                    <i class="fas fa-times"></i>
+                    <span>Bulldoze</span>
+                </button>
+                <button id="info-btn" class="tool-btn">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Info</span>
+                </button>
+            </div>
+
+            <div class="info-display">
+                <div id="building-info" class="hidden">
+                    <h4 id="building-name"></h4>
+                    <p id="building-description"></p>
+                    <div id="building-stats"></div>
+                </div>
+            </div>
         </div>
-    </footer>
+
+        <!-- Notification System -->
+        <div id="notifications"></div>
+
+        <!-- 3D Viewport -->
+        <div id="game-viewport"></div>
+
+        <!-- Camera Controls -->
+        <div id="camera-controls">
+            <button id="rotate-left" class="camera-btn">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button id="rotate-right" class="camera-btn">
+                <i class="fas fa-redo"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r155/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
