@@ -235,6 +235,7 @@ html {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     position: relative;
     overflow: hidden;
+    perspective: 1000px;
 }
 
 .hero::before {
@@ -302,21 +303,31 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: pulse 3s ease-in-out infinite;
+    animation: pulse3D 4s ease-in-out infinite;
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 20px 40px rgba(99, 102, 241, 0.3),
+        0 0 0 20px rgba(99, 102, 241, 0.1),
+        inset 0 0 50px rgba(255, 255, 255, 0.2);
 }
 
 .floating-card {
     position: absolute;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     padding: var(--spacing-base) var(--spacing-lg);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-large);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
     font-weight: 600;
     color: var(--text-primary);
-    animation: float 6s ease-in-out infinite;
+    animation: float3D 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
 }
 
 .floating-card i {
@@ -340,6 +351,18 @@ html {
     bottom: 20%;
     left: 20%;
     animation-delay: 4s;
+}
+
+.card-4 {
+    top: 10%;
+    right: 30%;
+    animation-delay: 1s;
+}
+
+.card-5 {
+    bottom: 10%;
+    right: 20%;
+    animation-delay: 3s;
 }
 
 .hero-scroll {
@@ -386,13 +409,17 @@ html {
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-light);
     text-align: center;
-    transition: all var(--transition-base);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 1px solid var(--border-color);
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
 .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(99, 102, 241, 0.1);
 }
 
 .feature-icon {
@@ -406,6 +433,18 @@ html {
     justify-content: center;
     font-size: var(--font-size-2xl);
     color: white;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 10px 20px rgba(99, 102, 241, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.feature-card:hover .feature-icon {
+    transform: translateZ(20px) rotateY(180deg);
+    box-shadow: 
+        0 20px 40px rgba(99, 102, 241, 0.4),
+        inset 0 0 30px rgba(255, 255, 255, 0.3);
 }
 
 .feature-card h3 {
@@ -767,6 +806,42 @@ html {
     }
 }
 
+@keyframes pulse3D {
+    0%, 100% {
+        transform: scale(1) rotateX(0deg) rotateY(0deg);
+    }
+    25% {
+        transform: scale(1.02) rotateX(5deg) rotateY(0deg);
+    }
+    50% {
+        transform: scale(1.05) rotateX(0deg) rotateY(5deg);
+    }
+    75% {
+        transform: scale(1.02) rotateX(-5deg) rotateY(0deg);
+    }
+}
+
+@keyframes float3D {
+    0%, 100% {
+        transform: translateY(0) rotateX(0deg) rotateZ(0deg);
+    }
+    33% {
+        transform: translateY(-15px) rotateX(10deg) rotateZ(2deg);
+    }
+    66% {
+        transform: translateY(-25px) rotateX(-5deg) rotateZ(-2deg);
+    }
+}
+
+@keyframes rotate3D {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+    }
+}
+
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
@@ -859,11 +934,28 @@ html {
     .floating-card {
         position: static;
         margin: var(--spacing-base);
+        transform: none !important;
     }
     
     .hero-image {
         width: 250px;
         height: 250px;
+    }
+    
+    /* Simplified 3D effects for mobile */
+    .feature-card:hover {
+        transform: translateY(-5px) scale(1.02);
+    }
+    
+    .hero-3d-shapes,
+    .bg-3d-elements {
+        display: none;
+    }
+    
+    /* Disable complex 3D transforms on mobile */
+    .hero-visual[data-mouse-3d],
+    .floating-card[data-tilt] {
+        transform: none !important;
     }
 }
 
@@ -935,4 +1027,189 @@ html {
     to {
         transform: translate(-50%, -50%) rotate(360deg);
     }
+}
+
+/* 3D Background Elements */
+.bg-3d-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+.bg-3d-shape {
+    position: absolute;
+    background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(147, 51, 234, 0.1));
+    border-radius: 20px;
+    animation: float3D 8s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+.bg-3d-shape:nth-child(1) {
+    width: 100px;
+    height: 100px;
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 12s;
+}
+
+.bg-3d-shape:nth-child(2) {
+    width: 80px;
+    height: 80px;
+    top: 20%;
+    right: 15%;
+    animation-delay: 2s;
+    animation-duration: 10s;
+}
+
+.bg-3d-shape:nth-child(3) {
+    width: 120px;
+    height: 120px;
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+    animation-duration: 14s;
+}
+
+.bg-3d-shape:nth-child(4) {
+    width: 60px;
+    height: 60px;
+    bottom: 10%;
+    right: 10%;
+    animation-delay: 6s;
+    animation-duration: 8s;
+}
+
+/* 3D Cube Animation */
+.cube-3d {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    transform-style: preserve-3d;
+    animation: rotate3D 20s linear infinite;
+}
+
+.cube-face {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.cube-face.front { transform: rotateY(0deg) translateZ(25px); }
+.cube-face.back { transform: rotateY(180deg) translateZ(25px); }
+.cube-face.right { transform: rotateY(90deg) translateZ(25px); }
+.cube-face.left { transform: rotateY(-90deg) translateZ(25px); }
+.cube-face.top { transform: rotateX(90deg) translateZ(25px); }
+.cube-face.bottom { transform: rotateX(-90deg) translateZ(25px); }
+
+/* Perspective on scroll */
+.perspective-container {
+    perspective: 1000px;
+    perspective-origin: center center;
+}
+
+/* Hero 3D Shapes */
+.hero-3d-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.shape-3d {
+    position: absolute;
+    transform-style: preserve-3d;
+    animation: rotate3D 15s linear infinite;
+}
+
+.shape-sphere {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.8), rgba(99, 102, 241, 0.3));
+    border-radius: 50%;
+    top: 25%;
+    left: 80%;
+    box-shadow: 
+        0 0 20px rgba(99, 102, 241, 0.5),
+        inset -10px -10px 20px rgba(0, 0, 0, 0.2);
+    animation-duration: 12s;
+}
+
+.shape-pyramid {
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 50px solid rgba(245, 158, 11, 0.7);
+    top: 70%;
+    left: 75%;
+    filter: drop-shadow(0 10px 20px rgba(245, 158, 11, 0.3));
+    animation-duration: 18s;
+    animation-direction: reverse;
+}
+
+.shape-torus {
+    width: 50px;
+    height: 50px;
+    border: 15px solid rgba(16, 185, 129, 0.6);
+    border-radius: 50%;
+    top: 45%;
+    left: 85%;
+    box-shadow: 
+        0 0 30px rgba(16, 185, 129, 0.4),
+        inset 0 0 20px rgba(16, 185, 129, 0.2);
+    animation-duration: 10s;
+}
+
+/* Mouse Following 3D Effect */
+.hero-visual[data-mouse-3d] {
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+}
+
+/* Tilt Effect for Cards */
+.floating-card[data-tilt] {
+    transition: transform 0.2s ease-out;
+}
+
+.floating-card[data-tilt]:hover {
+    transform: translateY(-10px) rotateX(15deg) rotateY(15deg) scale(1.05);
+}
+
+/* Advanced 3D Button Effects */
+.btn {
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: visible;
+}
+
+.btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: inherit;
+    transform: translateZ(-2px);
+    filter: brightness(0.8);
+    transition: all 0.3s ease;
+}
+
+.btn:hover:before {
+    transform: translateZ(-4px);
+}
+
+.btn:hover {
+    transform: translateY(-2px) translateZ(2px);
 }

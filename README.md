@@ -34,6 +34,16 @@ A modern, responsive landing page built with HTML5, CSS3, and vanilla JavaScript
 - **Form Validation**: Real-time input validation
 - **Notification System**: Success/error messages
 
+### ✨ 3D Animation Features
+- **3D Hero Elements**: Rotating geometric shapes and floating cards
+- **Mouse-Following Effects**: Elements respond to mouse movement
+- **3D Tilt Cards**: Interactive tilt effects on hover
+- **3D Background Shapes**: Floating cubes and geometric elements
+- **3D Parallax Scrolling**: Multi-layer depth on scroll
+- **3D Button Effects**: Elevated button interactions
+- **Card Flip Animation**: Double-click to flip feature cards
+- **3D Perspective**: Advanced CSS 3D transforms
+
 ## 🛠️ Technologies Used
 
 - **HTML5**: Semantic markup with proper accessibility

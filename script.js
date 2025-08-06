@@ -337,6 +337,9 @@ function init() {
     enhanceFloatingCards();
     initThemeToggle();
     
+    // 3D Effects
+    initAll3DEffects();
+    
     // Delayed animations
     setTimeout(() => {
         initTypingAnimation();
@@ -380,10 +383,185 @@ window.addEventListener('load', () => {
     }, 0);
 });
 
+// 3D Effects Functions
+function init3DEffects() {
+    // Add 3D perspective to sections
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        section.style.transformStyle = 'preserve-3d';
+    });
+    
+    // Enhance floating cards with 3D movement
+    const floatingCards = document.querySelectorAll('.floating-card');
+    floatingCards.forEach((card, index) => {
+        // Random 3D movement
+        setInterval(() => {
+            const randomX = (Math.random() - 0.5) * 20;
+            const randomY = (Math.random() - 0.5) * 20;
+            const randomZ = (Math.random() - 0.5) * 10;
+            const randomRotX = (Math.random() - 0.5) * 10;
+            const randomRotY = (Math.random() - 0.5) * 10;
+            
+            card.style.transform += ` translate3d(${randomX}px, ${randomY}px, ${randomZ}px) rotateX(${randomRotX}deg) rotateY(${randomRotY}deg)`;
+        }, 4000 + index * 1000);
+    });
+}
+
+function initMouseFollowing3D() {
+    const heroVisual = document.querySelector('.hero-visual');
+    const floatingCards = document.querySelectorAll('.floating-card');
+    
+    if (heroVisual) {
+        heroVisual.setAttribute('data-mouse-3d', 'true');
+        
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            // Calculate rotation based on mouse position
+            const rotateX = (mouseY - 0.5) * 20;
+            const rotateY = (mouseX - 0.5) * -20;
+            
+            // Apply 3D transform to hero visual
+            heroVisual.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            
+            // Apply subtle movement to floating cards
+            floatingCards.forEach((card, index) => {
+                const multiplier = (index + 1) * 0.5;
+                const cardRotateX = (mouseY - 0.5) * (10 * multiplier);
+                const cardRotateY = (mouseX - 0.5) * (-10 * multiplier);
+                const translateZ = (mouseX + mouseY) * (5 * multiplier);
+                
+                card.style.transform += ` rotateX(${cardRotateX}deg) rotateY(${cardRotateY}deg) translateZ(${translateZ}px)`;
+            });
+        });
+        
+        // Reset on mouse leave
+        document.addEventListener('mouseleave', () => {
+            heroVisual.style.transform = '';
+            floatingCards.forEach(card => {
+                card.style.transform = '';
+            });
+        });
+    }
+}
+
+function initTiltEffects() {
+    const tiltElements = document.querySelectorAll('[data-tilt]');
+    
+    tiltElements.forEach(element => {
+        element.addEventListener('mouseenter', (e) => {
+            element.style.transition = 'transform 0.2s ease-out';
+        });
+        
+        element.addEventListener('mousemove', (e) => {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+            
+            const rotateX = (deltaY / rect.height) * -30;
+            const rotateY = (deltaX / rect.width) * 30;
+            
+            element.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05) translateZ(20px)`;
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            element.style.transform = '';
+            element.style.transition = 'transform 0.5s ease-out';
+        });
+    });
+}
+
+// Enhanced 3D Parallax
+function init3DParallax() {
+    const bg3DElements = document.querySelectorAll('.bg-3d-shape, .cube-3d, .shape-3d');
+    
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        
+        bg3DElements.forEach((element, index) => {
+            const speed = 0.5 + (index * 0.1);
+            const rotateSpeed = 0.1 + (index * 0.05);
+            
+            const yPos = -(scrolled * speed);
+            const rotateX = scrolled * rotateSpeed;
+            const rotateY = scrolled * (rotateSpeed * 0.5);
+            
+            element.style.transform = `translate3d(0, ${yPos}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+    });
+}
+
+// 3D Card Flip Effect
+function init3DCardFlip() {
+    const featureCards = document.querySelectorAll('.feature-card');
+    
+    featureCards.forEach(card => {
+        let isFlipped = false;
+        
+        card.addEventListener('dblclick', () => {
+            isFlipped = !isFlipped;
+            
+            if (isFlipped) {
+                card.style.transform = 'rotateY(180deg) translateZ(20px)';
+                card.style.background = 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))';
+                card.style.color = 'white';
+            } else {
+                card.style.transform = '';
+                card.style.background = 'white';
+                card.style.color = '';
+            }
+        });
+    });
+}
+
+// 3D Scroll Reveal
+function init3DScrollReveal() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                element.style.transform = 'translateZ(0) rotateX(0deg) rotateY(0deg)';
+                element.style.opacity = '1';
+            } else {
+                const element = entry.target;
+                element.style.transform = 'translateZ(-100px) rotateX(45deg) rotateY(-45deg)';
+                element.style.opacity = '0.7';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe 3D elements
+    const elements3D = document.querySelectorAll('.feature-card, .testimonial-card, .floating-card');
+    elements3D.forEach(el => {
+        el.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        observer.observe(el);
+    });
+}
+
+// Initialize all 3D effects
+function initAll3DEffects() {
+    init3DEffects();
+    initMouseFollowing3D();
+    initTiltEffects();
+    init3DParallax();
+    init3DCardFlip();
+    init3DScrollReveal();
+}
+
 // Export functions for potential module usage
 window.LandingPage = {
     showNotification,
     hideNotification,
     toggleMobileNav,
-    closeMobileNav
+    closeMobileNav,
+    initAll3DEffects
 };
